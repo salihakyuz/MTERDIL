@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>İletişim — Mete Erdil DJ</title>
+  <meta name="description" content="Mete Erdil ile iletişime geçin. Festival, kulüp ve özel etkinlik rezervasyonları." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Full-page animated background */
+    #contact-bg {
+      position: fixed; inset: 0; z-index: -1; overflow: hidden;
+    }
+    .bg-blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: .12;
+      animation: blobFloat var(--d,12s) ease-in-out infinite alternate;
+    }
+    @keyframes blobFloat {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(var(--tx,30px), var(--ty,-30px)) scale(1.15); }
+    }
+
+    /* Availability badge */
+    .avail-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .4rem 1rem;
+      background: rgba(0,229,255,.07); border: 1px solid rgba(0,229,255,.25);
+      border-radius: 20px; font-size: .65rem; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--clr-cyan); margin-bottom: 1.5rem;
+    }
+    .avail-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--clr-cyan);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(0,229,255,.6); }
+      50%      { box-shadow: 0 0 0 6px rgba(0,229,255,0); }
+    }
+
+    /* Map placeholder */
+    .map-placeholder {
+      margin-top: 2rem;
+      border: 1px solid var(--clr-border); border-radius: 6px;
+      overflow: hidden; aspect-ratio: 16/7; position: relative;
+      background: var(--clr-card);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .map-placeholder-inner {
+      text-align: center; color: var(--clr-muted);
+    }
+    .map-placeholder-inner svg { margin: 0 auto .8rem; display: block; }
+    .map-placeholder-inner p { font-size: .8rem; letter-spacing: .1em; }
+    .map-placeholder::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent, transparent 20px,
+        rgba(255,255,255,.015) 20px, rgba(255,255,255,.015) 21px
+      );
+    }
+  </style>
+</head>
+<body>
+
+<div id="page-transition" class="page-transition" style="display:none">
+  <span class="page-transition-logo">METE ERDİL</span>
+</div>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- Animated BG -->
+<div id="contact-bg" aria-hidden="true">
+  <div class="bg-blob" style="width:700px;height:700px;background:#00E5FF;top:-200px;left:-200px;--d:14s;--tx:60px;--ty:40px"></div>
+  <div class="bg-blob" style="width:600px;height:600px;background:#7C3AED;bottom:-150px;right:-150px;--d:11s;--tx:-40px;--ty:-50px"></div>
+  <div class="bg-blob" style="width:400px;height:400px;background:#00E5FF;bottom:30%;right:20%;--d:16s;--tx:30px;--ty:60px"></div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo" data-transition>METE ERDİL</a>
+  <ul class="nav-links" role="list">
+    <li><a href="index.html"    data-transition>Ana Sayfa</a></li>
+    <li><a href="portfolio.html" data-transition>Portfolio</a></li>
+    <li><a href="contact.html"  class="active">İletişim</a></li>
+  </ul>
+  <button class="nav-hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- CONTACT PAGE -->
+<main id="contact-page" style="grid-template-columns:1fr;max-width:720px;">
+
+  <div class="contact-left">
+    <div class="avail-badge reveal">
+      <span class="avail-dot"></span>
+      Rezervasyon için uygun
+    </div>
+    <span class="section-label reveal" data-delay="1">İletişim</span>
+    <h1 class="reveal" data-delay="2">Birlikte<br>Çalışalım</h1>
+
+    <!-- Contact Card -->
+    <div class="contact-card reveal" data-delay="3">
+      <h3>Mete Erdil</h3>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="18" height="18" fill="none" stroke="#00E5FF" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Telefon</div>
+          <div class="contact-item-value">
+            <a href="tel:+905399204960">0539 920 49 60</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="18" height="18" fill="none" stroke="#00E5FF" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z"/>
+            <path stroke-linecap="round" d="M22 6l-10 7L2 6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-item-label">E-posta</div>
+          <div class="contact-item-value">
+            <a href="mailto:meteetdil11@gmail.com">meteetdil11@gmail.com</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="18" height="18" fill="none" stroke="#00E5FF" stroke-width="1.5" viewBox="0 0 24 24">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Instagram</div>
+          <div class="contact-item-value">
+            <a href="https://www.instagram.com/mterdil" target="_blank" rel="noopener">@mterdil</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="18" height="18" fill="none" stroke="#00E5FF" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" d="M17.657 16.657A8 8 0 116.343 5.343a8 8 0 0111.314 11.314z"/>
+            <path stroke-linecap="round" d="M13.414 10.586a2 2 0 11-2.828 2.828"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Faaliyet Alanı</div>
+          <div class="contact-item-value">Türkiye Geneli &amp; Yurt Dışı</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Buttons -->
+    <div class="social-grid reveal" data-delay="4">
+      <a href="https://www.instagram.com/mterdil" target="_blank" rel="noopener" class="social-btn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+        Instagram
+      </a>
+      <a href="mailto:meteetdil11@gmail.com" class="social-btn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z"/>
+          <path stroke-linecap="round" d="M22 6l-10 7L2 6"/>
+        </svg>
+        E-posta
+      </a>
+      <a href="tel:+905399204960" class="social-btn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+        </svg>
+        Ara
+      </a>
+    </div>
+
+    <!-- Map Placeholder -->
+    <div class="map-placeholder reveal" data-delay="4">
+      <div class="map-placeholder-inner">
+        <svg width="36" height="36" fill="none" stroke="#00E5FF" stroke-width="1.2" viewBox="0 0 24 24" opacity=".5">
+          <path stroke-linecap="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <p>Türkiye &amp; Dünya Geneli</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Background music -->
+<audio id="bg-music" loop preload="auto" src="music/gogo.mp3"></audio>
+
+<!-- Music bar -->
+<div id="music-bar">
+  <div class="eq-mini" id="eq-mini">
+    <span style="--d:.6s;height:10px"></span>
+    <span style="--d:.9s;height:14px"></span>
+    <span style="--d:.7s;height:8px"></span>
+    <span style="--d:1s;height:12px"></span>
+    <span style="--d:.75s;height:10px"></span>
+  </div>
+  <div class="music-bar-title">
+    <strong>Gógó</strong>
+    <span>Lulu Rouge Remix</span>
+  </div>
+  <button id="music-toggle" aria-label="Toggle music">
+    <svg id="icon-pause" width="12" height="12" fill="white" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+    <svg id="icon-play" width="12" height="12" fill="white" viewBox="0 0 24 24" style="display:none;margin-left:1px"><path d="M5 3l14 9L5 21V3z"/></svg>
+  </button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">METE ERDİL</span>
+  <span class="footer-copy">© 2026 Mete Erdil. Tüm hakları saklıdır.</span>
+  <div class="footer-right">
+    <a href="https://www.instagram.com/mterdil" target="_blank" rel="noopener" class="footer-ig">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+      </svg>
+      @mterdil
+    </a>
+    <button class="back-top" aria-label="Back to top">
+      <svg width="16" height="16" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" d="M18 15l-6-6-6 6"/>
+      </svg>
+    </button>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/music.js"></script>
+</body>
+</html>
