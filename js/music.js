@@ -72,10 +72,3 @@
   }
 })();
 
-/* ---- Hero video fade-in (index.html only) ---- */
-(function () {
-  const vid = document.getElementById('hero-video');
-  if (!vid) return;
-  vid.addEventListener('canplay', () => { vid.style.opacity = '0.45'; }, { once: true });
-  setTimeout(() => { if (vid.style.opacity === '0') vid.style.opacity = '0.45'; }, 1000);
-})();
