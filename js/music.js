@@ -1,5 +1,5 @@
 /* ============================================================
-   Persistent background music — single instance across pages
+   Persistent background music — continues across page navigation
    ============================================================ */
 (function () {
   const audio     = document.getElementById('bg-music');
@@ -12,8 +12,12 @@
 
   audio.volume = 0.5;
 
-  const savedTime  = parseFloat(sessionStorage.getItem('musicTime')    || '0');
-  const wasPlaying = sessionStorage.getItem('musicPlaying') !== 'false';
+  /* Read saved state */
+  const savedTime  = parseFloat(sessionStorage.getItem('musicTime') || '0');
+  const savedState = sessionStorage.getItem('musicPlaying');
+  /* First visit = null → play. Explicitly paused = 'false' → don't play. */
+  const shouldPlay = savedState !== 'false';
+
   if (savedTime > 0) audio.currentTime = savedTime;
 
   function setUI(playing) {
@@ -23,34 +27,41 @@
     if (iconPause) iconPause.style.display = playing ? ''     : 'none';
   }
 
-  function tryPlay() {
-    if (!wasPlaying) { setUI(false); return; }
-    audio.play().then(() => setUI(true)).catch(() => {
-      setUI(false);
-      /* Play on first interaction */
-      const events = ['click','keydown','touchstart','scroll'];
-      function go() {
-        audio.play().then(() => setUI(true)).catch(() => {});
-        events.forEach(e => document.removeEventListener(e, go));
-      }
-      events.forEach(e => document.addEventListener(e, go, { once: true, passive: true }));
-    });
+  function startPlay() {
+    audio.play()
+      .then(() => setUI(true))
+      .catch(() => {
+        /* Still blocked — wait for any user gesture on this page */
+        setUI(false);
+        const events = ['click', 'keydown', 'touchstart', 'scroll'];
+        function onGesture() {
+          audio.play().then(() => {
+            setUI(true);
+            sessionStorage.setItem('musicPlaying', 'true');
+          }).catch(() => {});
+          events.forEach(e => document.removeEventListener(e, onGesture));
+        }
+        events.forEach(e => document.addEventListener(e, onGesture, { once: true, passive: true }));
+      });
   }
 
-  tryPlay();
+  if (shouldPlay) {
+    startPlay();
+  } else {
+    setUI(false);
+  }
 
-  /* ---- Stop audio BEFORE leaving so next page doesn't overlap ---- */
-  function saveAndStop() {
+  /* Save position before leaving — do NOT pause here so next page can resume */
+  function saveState() {
     sessionStorage.setItem('musicTime',    audio.currentTime);
-    sessionStorage.setItem('musicPlaying', (!audio.paused).toString());
-    audio.pause();   /* stop this page's audio immediately */
+    sessionStorage.setItem('musicPlaying', audio.paused ? 'false' : 'true');
   }
-  window.addEventListener('pagehide',     saveAndStop);
-  window.addEventListener('beforeunload', saveAndStop);
+  window.addEventListener('pagehide',     saveState);
+  window.addEventListener('beforeunload', saveState);
 
-  /* Resume if page restored from bfcache */
+  /* Handle bfcache restore */
   window.addEventListener('pageshow', e => {
-    if (e.persisted && sessionStorage.getItem('musicPlaying') === 'true') {
+    if (e.persisted && sessionStorage.getItem('musicPlaying') === 'true' && audio.paused) {
       audio.play().then(() => setUI(true)).catch(() => {});
     }
   });
@@ -71,4 +82,3 @@
     });
   }
 })();
-
