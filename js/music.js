@@ -1,5 +1,5 @@
 /* ============================================================
-   Persistent background music across pages via sessionStorage
+   Persistent background music — single instance across pages
    ============================================================ */
 (function () {
   const audio     = document.getElementById('bg-music');
@@ -12,50 +12,70 @@
 
   audio.volume = 0.5;
 
-  /* Restore position + playing state from previous page */
-  const savedTime    = parseFloat(sessionStorage.getItem('musicTime') || '0');
-  const wasPlaying   = sessionStorage.getItem('musicPlaying') !== 'false';
-
+  const savedTime  = parseFloat(sessionStorage.getItem('musicTime')    || '0');
+  const wasPlaying = sessionStorage.getItem('musicPlaying') !== 'false';
   if (savedTime > 0) audio.currentTime = savedTime;
 
-  function setUIPlaying(playing) {
-    if (!bar) return;
-    bar.classList.add('show');
+  function setUI(playing) {
+    if (bar)       bar.classList.add('show');
     if (eqMini)    eqMini.classList.toggle('paused', !playing);
     if (iconPlay)  iconPlay.style.display  = playing ? 'none' : '';
     if (iconPause) iconPause.style.display = playing ? ''     : 'none';
   }
 
-  if (wasPlaying) {
-    audio.play().then(() => {
-      setUIPlaying(true);
-    }).catch(() => {
-      /* Autoplay blocked — show bar with play button */
-      setUIPlaying(false);
-      if (bar) bar.classList.add('show');
+  function tryPlay() {
+    if (!wasPlaying) { setUI(false); return; }
+    audio.play().then(() => setUI(true)).catch(() => {
+      setUI(false);
+      /* Play on first interaction */
+      const events = ['click','keydown','touchstart','scroll'];
+      function go() {
+        audio.play().then(() => setUI(true)).catch(() => {});
+        events.forEach(e => document.removeEventListener(e, go));
+      }
+      events.forEach(e => document.addEventListener(e, go, { once: true, passive: true }));
     });
-  } else {
-    setUIPlaying(false);
-    if (bar) bar.classList.add('show');
   }
 
-  /* Save state before leaving the page */
-  window.addEventListener('pagehide', save);
-  window.addEventListener('beforeunload', save);
-  function save() {
+  tryPlay();
+
+  /* ---- Stop audio BEFORE leaving so next page doesn't overlap ---- */
+  function saveAndStop() {
     sessionStorage.setItem('musicTime',    audio.currentTime);
     sessionStorage.setItem('musicPlaying', (!audio.paused).toString());
+    audio.pause();   /* stop this page's audio immediately */
   }
+  window.addEventListener('pagehide',     saveAndStop);
+  window.addEventListener('beforeunload', saveAndStop);
+
+  /* Resume if page restored from bfcache */
+  window.addEventListener('pageshow', e => {
+    if (e.persisted && sessionStorage.getItem('musicPlaying') === 'true') {
+      audio.play().then(() => setUI(true)).catch(() => {});
+    }
+  });
 
   /* Toggle button */
   if (toggleBtn) {
     toggleBtn.addEventListener('click', () => {
       if (audio.paused) {
-        audio.play().then(() => setUIPlaying(true));
+        audio.play().then(() => {
+          setUI(true);
+          sessionStorage.setItem('musicPlaying', 'true');
+        });
       } else {
         audio.pause();
-        setUIPlaying(false);
+        setUI(false);
+        sessionStorage.setItem('musicPlaying', 'false');
       }
     });
   }
+})();
+
+/* ---- Hero video fade-in (index.html only) ---- */
+(function () {
+  const vid = document.getElementById('hero-video');
+  if (!vid) return;
+  vid.addEventListener('canplay', () => { vid.style.opacity = '0.45'; }, { once: true });
+  setTimeout(() => { if (vid.style.opacity === '0') vid.style.opacity = '0.45'; }, 1000);
 })();
